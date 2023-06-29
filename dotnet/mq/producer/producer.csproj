@@ -11,6 +11,9 @@
     <Content Include="Avro/User.avsc" Link="Avro/User.avsc">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
+	<Content Include="Avro/Agent.avsc" Link="Avro/Agent.avsc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="2.1.1" />

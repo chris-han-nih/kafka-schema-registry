@@ -1,0 +1,23 @@
+{
+  "namespace": "nsus.platform",
+  "name": "agent",
+  "type": "record",
+  "fields": [
+	{
+	  "name": "name",
+	  "type": "string",
+	  "description": "Name of the agent"
+	},
+	{
+	  "name": "logo",
+	  "type": "string",
+	  "description": "Logo of the agent"
+	},
+	{
+	  "name": "group_number",
+	  "type": "long",
+	  "default": 0,
+	  "description": "Group number of the agent"
+	}
+  ]
+}

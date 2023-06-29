@@ -1,5 +1,5 @@
 {
-  "namespace": "nsus.serialization.avro",
+  "namespace": "nsus.platform",
   "name": "user",
   "type": "record",
   "fields": [
