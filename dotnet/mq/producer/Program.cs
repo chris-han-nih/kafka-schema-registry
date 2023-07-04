@@ -7,7 +7,7 @@ using converter;
 using model;
 using producer;
 
-var producerConfig = new ProducerConfig { BootstrapServers = "localhost:9092", EnableIdempotence = true };
+var producerConfig = new ProducerConfig { BootstrapServers = "localhost:29092", EnableIdempotence = true };
 var schemaRegistryConfig = new SchemaRegistryConfig { Url = "http://localhost:8081" };
 var avroSerializerConfig = new AvroSerializerConfig { BufferBytes = 1024, AutoRegisterSchemas = true };
 
