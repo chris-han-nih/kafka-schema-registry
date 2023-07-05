@@ -11,7 +11,8 @@ const consumer = kafka.consumer({ groupId: 'node-test-group',  })
 
 const Topic = 'test'
 
-const run = async () => {
+const run = async () =>
+{
 
   await consumer.connect()
   await consumer.subscribe({ topic: Topic })
