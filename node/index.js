@@ -9,7 +9,7 @@ const kafka = new Kafka({
 })
 const consumer = kafka.consumer({ groupId: 'node-test-group',  })
 
-const Topic = 'test'
+const Topic = 'schema-registry-test'
 
 const run = async () =>
 {

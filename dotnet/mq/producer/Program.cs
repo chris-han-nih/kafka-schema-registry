@@ -19,7 +19,7 @@ var agentSchema = Schema.Parse(agentSchemaStream);
 
 while (true)
 {
-    await Task.Delay(1000, cts.Token);
+    await Task.Delay(100, cts.Token);
 
      var agent = new Agent
                 {
@@ -34,17 +34,18 @@ while (true)
                 };
     await produce(agent, agentSchema, cts);
     await produce(user, userSchema, cts);
+
 }
 
 async Task produce<T>(T body, Schema schema, CancellationTokenSource cancellationTokenSource) where T : class
 {
     var record = AvroRecord.ToGenericRecord(body, (RecordSchema)schema);
     var message = new Message<string, GenericRecord> { Value = record };
-    await KafkaProducer.Instance.Producer.ProduceAsync("test", message)
+    await KafkaProducer.Instance.Producer.ProduceAsync("schema-registry-test", message)
                   .ContinueWith(task =>
                                 {
                                     Console.WriteLine(!task.IsFaulted
-                                                          ? $"produced to: {task.Result.TopicPartitionOffset}, {task.Result.Value}"
+                                                          ? $"produced to: {task.Result.TopicPartitionOffset}"
                                                           : $"error producing message: {task.Exception?.Message}");
                                 },
                                 cancellationTokenSource.Token);

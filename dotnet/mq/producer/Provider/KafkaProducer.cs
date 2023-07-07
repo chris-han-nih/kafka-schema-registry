@@ -8,7 +8,9 @@ using Confluent.SchemaRegistry.Serdes;
 public sealed class KafkaProducer
 {
    private readonly IProducer<string, GenericRecord> _producer;
-   private readonly ProducerConfig _producerConfig = new() { BootstrapServers = "localhost:29092", EnableIdempotence = true };
+
+   private readonly ProducerConfig _producerConfig =
+       new() { BootstrapServers = "localhost:29092", EnableIdempotence = true, Acks = Acks.All };
    private readonly SchemaRegistryConfig _schemaRegistryConfig = new() { Url = "http://localhost:8081" };
    private readonly AvroSerializerConfig _avroSerializerConfig = new() { BufferBytes = 1024, AutoRegisterSchemas = true };
 

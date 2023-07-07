@@ -20,7 +20,7 @@ using var consumer = new ConsumerBuilder<string, GenericRecord>(consumerConfig)
                     .SetValueDeserializer(new AvroDeserializer<GenericRecord>(schemaRegistry).AsSyncOverAsync())
                     .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
                     .Build();
-consumer.Subscribe("test");
+consumer.Subscribe("schema-registry-test");
 
 while(true)
 {
