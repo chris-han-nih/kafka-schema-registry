@@ -6,10 +6,11 @@ using Confluent.SchemaRegistry.Serdes;
 using converter;
 using model;
 using producer;
+using producer.Provider;
 
-var producerConfig = new ProducerConfig { BootstrapServers = "localhost:29092", EnableIdempotence = true };
-var schemaRegistryConfig = new SchemaRegistryConfig { Url = "http://localhost:8081" };
-var avroSerializerConfig = new AvroSerializerConfig { BufferBytes = 1024, AutoRegisterSchemas = true };
+// var producerConfig = new ProducerConfig { BootstrapServers = "localhost:29092", EnableIdempotence = true };
+// var schemaRegistryConfig = new SchemaRegistryConfig { Url = "http://localhost:8081" };
+// var avroSerializerConfig = new AvroSerializerConfig { BufferBytes = 1024, AutoRegisterSchemas = true };
 
 var cts = new CancellationTokenSource();
 
@@ -24,14 +25,16 @@ var agentSchema = Avro.Schema.Parse(agentSchemaStream);
 #endregion
 
 #region schema registry client
-var schemaRegistry = new CachedSchemaRegistryClient(schemaRegistryConfig);
-var nihSchemaRegistry = new NihSchemaRegistryClient(schemaRegistry, 100);
+// var schemaRegistry = new CachedSchemaRegistryClient(schemaRegistryConfig);
+// var nihSchemaRegistry = new NihSchemaRegistryClient(schemaRegistry, 100);
 #endregion
 
-using var producer = new ProducerBuilder<string, GenericRecord>(producerConfig)
-                    .SetKeySerializer(Serializers.Utf8)
-                    .SetValueSerializer(new AvroSerializer<GenericRecord>(nihSchemaRegistry, avroSerializerConfig))
-                    .Build();
+// using var producer = new ProducerBuilder<string, GenericRecord>(producerConfig)
+//                     .SetKeySerializer(Serializers.Utf8)
+//                     .SetValueSerializer(new AvroSerializer<GenericRecord>(nihSchemaRegistry, avroSerializerConfig))
+//                     .Build();
+
+// var producer = KafkaProducer.Instance.Producer;
 
 while (true)
 {
@@ -56,7 +59,7 @@ async Task produce<T>(T body, Avro.Schema schema, CancellationTokenSource cancel
 {
     var record = AvroRecord.ToGenericRecord(body, (RecordSchema)schema);
     var message = new Message<string, GenericRecord> { Value = record };
-    await producer.ProduceAsync("test", message)
+    await KafkaProducer.Instance.Producer.ProduceAsync("test", message)
                   .ContinueWith(task =>
                                 {
                                     Console.WriteLine(!task.IsFaulted
