@@ -5,7 +5,7 @@ using Confluent.SchemaRegistry;
 public class NihSchemaRegistryClient: ISchemaRegistryClient
 {
     private readonly ISchemaRegistryClient _innerClient;
-    public NihSchemaRegistryClient(ISchemaRegistryClient innerClient, int maxCachedSchemas)
+    public NihSchemaRegistryClient(ISchemaRegistryClient innerClient, int maxCachedSchemas = 500)
     {
         _innerClient = innerClient;
         MaxCachedSchemas = maxCachedSchemas;
