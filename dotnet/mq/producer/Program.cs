@@ -1,9 +1,11 @@
 ﻿using Avro;
 using Avro.Generic;
 using Confluent.Kafka;
+using Confluent.SchemaRegistry;
 using converter;
 using model;
 using producer.Provider;
+using Schema = Avro.Schema;
 
 var cts = new CancellationTokenSource();
 
@@ -16,6 +18,13 @@ using var agentStreamReader = new StreamReader("Avro/Agent.avsc");
 var agentSchemaStream = agentStreamReader.ReadToEnd();
 var agentSchema = Schema.Parse(agentSchemaStream);
 #endregion
+
+#region Configurations
+var producerConfig = new ProducerConfig { BootstrapServers = "localhost:29092", EnableIdempotence = true, Acks = Acks.All };
+var schemaRegistryConfig = new SchemaRegistryConfig { Url = "http://localhost:8081" };
+#endregion
+
+var producer = KafkaProducer.Instance(producerConfig, schemaRegistryConfig).Producer;
 
 while (true)
 {
@@ -41,7 +50,7 @@ async Task produce<T>(T body, Schema schema, CancellationTokenSource cancellatio
 {
     var record = AvroRecord.ToGenericRecord(body, (RecordSchema)schema);
     var message = new Message<string, GenericRecord> { Value = record };
-    await KafkaProducer.Instance.Producer.ProduceAsync("schema-registry-test", message)
+    await producer.ProduceAsync("schema-registry-test", message)
                   .ContinueWith(task =>
                                 {
                                     Console.WriteLine(!task.IsFaulted
