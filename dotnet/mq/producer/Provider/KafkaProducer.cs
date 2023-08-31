@@ -7,7 +7,7 @@ using Confluent.SchemaRegistry.Serdes;
 
 public sealed class KafkaProducer
 {
-    private static Lazy<KafkaProducer>? instance;
+    private static Lazy<KafkaProducer> instance;
 
     private readonly AvroSerializerConfig _avroSerializerConfig =
         new() { BufferBytes = 1024, AutoRegisterSchemas = true };

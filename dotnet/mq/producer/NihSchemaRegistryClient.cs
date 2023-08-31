@@ -31,9 +31,9 @@ public class NihSchemaRegistryClient: ISchemaRegistryClient
 
     public Task<bool> IsCompatibleAsync(string subject, string schema) => _innerClient.IsCompatibleAsync(subject, schema);
 
-    public string ConstructKeySubjectName(string topic, string recordType = null) => $"{topic}-{recordType}-key";
+    public string ConstructKeySubjectName(string topic, string recordType = null!) => $"{topic}.{recordType}.key";
 
-    public string ConstructValueSubjectName(string topic, string recordType = null) => $"{topic}-{recordType}-value";
+    public string ConstructValueSubjectName(string topic, string recordType = null!) => $"{topic}.{recordType}.value";
 
     public int MaxCachedSchemas { get; }
 }

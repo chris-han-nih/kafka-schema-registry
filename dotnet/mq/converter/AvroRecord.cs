@@ -20,6 +20,15 @@ public abstract class AvroRecord
 
         return outputObject;
     }
+    
+    // public static GenericRecord ToGenericRecord<T>(T obj) where T : class
+    // {
+    //     var type = typeof(T);
+    //     
+    //     var schema = (Avro.RecordSchema) Avro.Schema.Parse(type.GetField("_SCHEMA").GetValue(null).ToString());
+    //     var genericRecord = new GenericRecord(schema);
+    //     return genericRecord;
+    // }
 
     public static GenericRecord ToGenericRecord<T>(T obj, Avro.Schema schema) where T : class
     {
@@ -33,6 +42,7 @@ public abstract class AvroRecord
         foreach (var field in recordSchema.Fields)
         {
             var value = obj.GetType().GetProperty(field.Name)?.GetValue(obj);
+            var type = field.GetType();
             genericRecord.Add(field.Name, value);
         }
 

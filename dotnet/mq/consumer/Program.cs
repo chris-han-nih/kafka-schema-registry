@@ -1,4 +1,5 @@
-﻿using Avro.Generic;
+﻿using System.Diagnostics;
+using Avro.Generic;
 using Confluent.Kafka;
 using Confluent.Kafka.SyncOverAsync;
 using Confluent.SchemaRegistry;
@@ -8,11 +9,11 @@ using model;
 
 var consumerConfig = new ConsumerConfig
                      {
-                         BootstrapServers = "localhost:29092",
+                         BootstrapServers = "devops-kafka-b1-dev.greatgameplatform.com:9092,devops-kafka-b1-dev.greatgameplatform.com:9092",
                          GroupId = "test-consumer-group",
-                         AutoOffsetReset = AutoOffsetReset.Latest
+                         AutoOffsetReset = AutoOffsetReset.Earliest
                      };
-var schemaRegistryConfig = new SchemaRegistryConfig { Url = "http://localhost:8081" };
+var schemaRegistryConfig = new SchemaRegistryConfig { Url = "http://10.140.4.138:8081" };
 var cts = new CancellationTokenSource();
 
 using var schemaRegistry = new CachedSchemaRegistryClient(schemaRegistryConfig);
@@ -20,10 +21,13 @@ using var consumer = new ConsumerBuilder<string, GenericRecord>(consumerConfig)
                     .SetValueDeserializer(new AvroDeserializer<GenericRecord>(schemaRegistry).AsSyncOverAsync())
                     .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
                     .Build();
-consumer.Subscribe("schema-registry-test");
+// consumer.Subscribe("np-schema-registry-test");
+consumer.Subscribe(new List<string> { "np-schema-registry-test" });
 
 while(true)
 {
+    var sw = new Stopwatch();
+    sw.Start();
     try
     {
         var consumeResult = consumer.Consume(cts.Token);
@@ -49,4 +53,6 @@ while(true)
     {
         Console.WriteLine($"Consume error: {e.Error.Reason}");
     }
+    sw.Stop();
+    Console.WriteLine($"consumed 1 message in {sw.ElapsedMilliseconds} ms");
 }
